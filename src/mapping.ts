@@ -25,6 +25,7 @@ function _findOrCreateOrder(params: Fill__Params): Order {
         order.feeRecipient = params.feeRecipientAddress;
         order.makerAssetData = params.makerAssetData;
         order.takerAssetData = params.takerAssetData;
+        order.createdAt = params._event.block.number;
         order.save();
     }
     return order as Order;
@@ -60,7 +61,9 @@ function _createFill(event: FillEvent, order: Order): Fill {
     fill.makerFeePaid = params.makerFeePaid;
     fill.takerFeePaid = params.takerFeePaid;
     fill.order = order.id;
+    fill.transaction = event.transaction.hash.toHex();
     fill.transactionHash = event.transaction.hash;
+    fill.createdAt = event.block.number;
     fill.save();
     return fill;
 }
